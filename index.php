@@ -21,7 +21,7 @@ function dir_to_array($dir)
     if ($f->isFile()) {
       $data[] = [
         "path" => $path,
-        'name' => $f->getFilename(),
+        'NAME' => $f->getFilename(),
         'extension' => $ext,
         'date' => $f->getMTime(),
         'size' => $f->getSize(),
