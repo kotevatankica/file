@@ -3,11 +3,13 @@
 $cut_date = (isset($_GET['cut_date'])) ? $_GET['cut_date'] : false;
 $cut_date_end = (isset($_GET['cut_date_end'])) ? $_GET['cut_date_end'] : false;
 $depth_search = (isset($_GET['depth_search'])) ? $_GET['depth_search'] : true;
-$return_direction = (isset($_GET['return_direction'])) ? $_GET['return_direction'] : 'older';
+$folder = (isset($_GET['folder'])) ? $_GET['folder'] : 'folder';
+
 
 function dir_to_array($dir)
 {
-  global $cut_date, $cut_date_end, $depth_search, $return_direction;
+  global $cut_date, $cut_date_end, $depth_search;
+
 
   if (!is_dir($dir)) {
     return null;
@@ -17,11 +19,6 @@ function dir_to_array($dir)
 
   $dirIterator = new DirectoryIterator($dir);
 
-  // $dirnamne = $dirIterator->getPathname();
-
-  // $data[$dirnamne]['name'] = $dirIterator->getPathname();
-  // $data[$dirnamne]['subs'] = [];
-
   foreach ($dirIterator as $f) {
     if ($f->isDot()) {
       continue;
@@ -30,9 +27,8 @@ function dir_to_array($dir)
     $path = $f->getPathname();
     $ext = pathinfo($f, PATHINFO_EXTENSION);
     $time = $f->getMTime();
-
     if ($f->isFile()) {
-      $data[][] = [
+      $data[] = [
         'name' => $f->getFilename(),
         'type' => $f->getType(),
         'extension' => $ext,
@@ -41,16 +37,11 @@ function dir_to_array($dir)
         'last_modified' => date("D. F jS, Y - h:ia", $time),
         'cut_date' => date("D. F jS, Y - h:ia", $cut_date),
         'cut_date_end' => date("D. F jS, Y - h:ia", $cut_date_end),
-        'return_direction' => $return_direction
+
       ];
     } else {
-      // $files = dir_to_array($path);
 
-      // $allFiles = scandir($dir);
-      // $sub_items = array_diff($allFiles, array('.', '..'));
-
-
-      $data[][] = [
+      $data[] = [
         'name' => $f->getFilename(),
         'type' => "dir",
         'size' => $f->getSize(),
@@ -58,7 +49,6 @@ function dir_to_array($dir)
         'last_modified' => date("D. F jS, Y - h:ia", $time),
         'cut_date' => date("D. F jS, Y - h:ia", $cut_date),
         'cut_date_end' => date("D. F jS, Y - h:ia", $cut_date_end),
-        'return_direction' => $return_direction,
         'subs' => ($depth_search) ? dir_to_array($path) : null
       ];
     }
@@ -70,10 +60,6 @@ function dir_to_array($dir)
 
 
 
-function pre_print($dir)
-{
-  echo '<pre>', print_r($dir, 1), '</pre>';
-}
 
 function dir_to_json($dir)
 {
@@ -86,4 +72,4 @@ function dir_to_json($dir)
 }
 
 
-echo dir_to_json('folder');
+echo dir_to_json($folder);
