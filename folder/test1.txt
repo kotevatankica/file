@@ -1,1 +1,59 @@
-jsdjhcvbsdjhcsdscsdcssdasdsimetoss
+ if($olderThan && $youngerThan) {
+
+                    if($data['data']['last_modified_t'] >= $olderThan && $data['data']['last_modified_t'] <= $youngerThan) {
+                      
+                        $res[] = $data;
+
+                        if($sorting_order == 'ascending') {
+
+                            usort($res, function($a, $b) {
+                                return $a['data']['last_modified_t'] - $b['data']['last_modified_t'];
+                            });
+
+                            usort($res, function($a, $b) {
+                                return strcasecmp($a['name'] , $b['name']);
+                            });
+                            
+                          
+                        } 
+
+                        else if ($sorting_order == 'descending') {
+                
+                            usort($res, function($a, $b) {
+                                return $b['data']['last_modified_t'] - $a['data']['last_modified_t'];
+                            });
+                            
+                            usort($res, function($a, $b) {
+                                return strcasecmp($b['name'] , $a['name']);
+                            });
+                            
+                        }
+                    }
+                }
+
+                else {
+
+                    $res[] = $data;
+
+                    if($sorting_order == 'ascending') {
+
+                        usort($res, function($a, $b) {
+                            return $a['data']['last_modified_t'] - $b['data']['last_modified_t'];
+                        });
+
+                    } 
+
+                    else if ($sorting_order == 'descending') {
+            
+                        usort($res, function($a, $b) {
+                            return $b['data']['last_modified_t'] - $a['data']['last_modified_t'];
+                        });
+                        
+                    }
+                }
+            }
+        }
+     
+        $res = (isset($res)) ? $res : array();
+
+        return $res;
